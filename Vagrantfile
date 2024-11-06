@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
     cp -v /vagrant/sites-available-lucas_nginx /etc/nginx/sites-enabled/lucas_nginx
     cp -v /vagrant/hosts /etc/hosts
 
-    cp -vr /vagrant/ftp /home/vagrant/ftp
+    mkdir /home/vagrant/ftp
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/vsftpd.key -out /etc/ssl/certs/vsftpd.crt -subj "/"
     cp -v /vagrant/vsftpd.conf /etc/vsftpd.conf
 
