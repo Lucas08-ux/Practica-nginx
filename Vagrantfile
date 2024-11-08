@@ -8,6 +8,7 @@
 Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
      apt-get update
+     apt-get install -y git
      apt-get install -y nginx
      apt-get install -y vsftpd
   SHELL
@@ -18,12 +19,15 @@ Vagrant.configure("2") do |config|
 
     lucas_nginx.vm.provision "shell", inline: <<-SHELL
 
+    mkdir -p /var/www/lucas_nginx/html
+    git clone https://github.com/cloudacademy/static-website-example /var/www/lucas_nginx/html
     cp -vr /vagrant/lucas_nginx /var/www/lucas_nginx
     chown -R www-data:www-data /var/www/lucas_nginx/html
     chmod -R 755 /var/www/lucas_nginx
 
+
     cp -v /vagrant/sites-available-lucas_nginx /etc/nginx/sites-available/lucas_nginx
-    cp -v /vagrant/sites-available-lucas_nginx /etc/nginx/sites-enabled/lucas_nginx
+    ln -s /etc/nginx/sites-available/lucas_nginx /etc/nginx/sites-enabled/
     cp -v /vagrant/hosts /etc/hosts
 
     mkdir /home/vagrant/ftp
