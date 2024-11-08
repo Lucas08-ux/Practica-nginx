@@ -24,13 +24,13 @@ Vagrant.configure("2") do |config|
     chown -R www-data:www-data /var/www/lucas_nginx/html
     chmod -R 755 /var/www/lucas_nginx
 
-    cp -v /vagrant/sites-available-lucas_nginx /etc/nginx/sites-available/lucas_nginx
+    cp -v /vagrant/lucas_nginx /etc/nginx/sites-available/lucas_nginx
     ln -s /etc/nginx/sites-available/lucas_nginx /etc/nginx/sites-enabled/
     cp -v /vagrant/hosts /etc/hosts
 
-    mkdir /home/vagrant/ftp
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/vsftpd.key -out /etc/ssl/certs/vsftpd.crt -subj "/"
-    cp -v /vagrant/vsftpd.conf /etc/vsftpd.conf
+    # mkdir /home/vagrant/ftp
+    # openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/vsftpd.key -out /etc/ssl/certs/vsftpd.crt -subj "/"
+    # cp -v /vagrant/vsftpd.conf /etc/vsftpd.conf
 
     systemctl restart vsftpd
     systemctl restart nginx
