@@ -13,19 +13,20 @@ Vagrant.configure("2") do |config|
      apt-get install -y vsftpd
   SHELL
 
-  config.vm.define "lucas_nginx" do |lucas_nginx|
-    lucas_nginx.vm.box = "debian/bookworm64"
-    lucas_nginx.vm.network "private_network", ip: "192.168.57.103"
+  config.vm.define "lucas" do |lucas|
+    lucas.vm.box = "debian/bookworm64"
+    lucas.vm.network "private_network", ip: "192.168.57.102"
+    config.ssh.insert_key = false
 
-    lucas_nginx.vm.provision "shell", inline: <<-SHELL
+    lucas.vm.provision "shell", inline: <<-SHELL
 
-    mkdir -p /var/www/lucas_nginx/html
-    git clone https://github.com/cloudacademy/static-website-example /var/www/lucas_nginx/html
-    chown -R www-data:www-data /var/www/lucas_nginx/html
-    chmod -R 755 /var/www/lucas_nginx
+    mkdir -p /var/www/lucas/html
+    git clone https://github.com/cloudacademy/static-website-example /var/www/lucas/html
+    chown -R www-data:www-data /var/www/lucas/html
+    chmod -R 755 /var/www/lucas
 
-    cp -v /vagrant/lucas_nginx /etc/nginx/sites-available/lucas_nginx
-    ln -s /etc/nginx/sites-available/lucas_nginx /etc/nginx/sites-enabled/
+    cp -v /vagrant/lucas /etc/nginx/sites-available/lucas
+    ln -s /etc/nginx/sites-available/lucas /etc/nginx/sites-enabled/
     cp -v /vagrant/hosts /etc/hosts
 
     mkdir /home/vagrant/ftp
@@ -36,5 +37,5 @@ Vagrant.configure("2") do |config|
     systemctl restart nginx
     systemctl status nginx
     SHELL
-  end # lucas_nginx
+  end # lucas
 end
