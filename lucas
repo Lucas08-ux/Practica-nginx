@@ -3,7 +3,7 @@ server {
 	listen [::]:80;
 	root /var/www/lucas/html;
 	index index.html index.htm index.nginx-debian.html;
-	server_name lucas;
+	server_name 192.168.57.102;
 	location / {
 		try_files $uri $uri/ =404;
 	}

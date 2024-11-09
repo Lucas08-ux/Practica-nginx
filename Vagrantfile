@@ -29,8 +29,27 @@ Vagrant.configure("2") do |config|
     ln -s /etc/nginx/sites-available/lucas /etc/nginx/sites-enabled/
     cp -v /vagrant/hosts /etc/hosts
 
-    mkdir /home/vagrant/ftp
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/vsftpd.key -out /etc/ssl/certs/vsftpd.crt -subj "/"
+    # Crear usuario FTP
+    useradd -m usuarioftp
+    echo "usuarioftp:usuarioftp" | sudo chpasswd
+    chown usuarioftp:usuarioftp /home/usuarioftp/ftp
+    chmod 755 /home/usuarioftp/ftp
+
+
+    mkdir /home/usuarioftp/ftp
+    # Usar expect para saltarse las preguntas del comando openssl
+    expect -c "
+    spawn openssl req -new -x509 -days 365 -nodes -out /etc/ssl/certs/vsftpd.crt -keyout /etc/ssl/private/vsftpd.key
+      expect {
+        \"Country Name (2 letter code)\" {send \"US\r\"; exp_continue}
+        \"State or Province Name (full name)\" {send \"California\r\"; exp_continue}
+        \"Locality Name (eg, city)\" {send \"Los Angeles\r\"; exp_continue}
+        \"Organization Name (eg, company)\" {send \"My Company\r\"; exp_continue}
+        \"Organizational Unit Name (eg, section)\" {send \"IT\r\"; exp_continue}
+        \"Common Name (e.g. server FQDN or YOUR name)\" {send \"localhost\r\"; exp_continue}
+        \"Email Address\" {send \"admin@example.com\r\"; exp_continue}
+      }
+    "
     cp -v /vagrant/vsftpd.conf /etc/vsftpd.conf
 
     systemctl restart vsftpd
