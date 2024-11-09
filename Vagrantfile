@@ -16,6 +16,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "lucas" do |lucas|
     lucas.vm.box = "debian/bookworm64"
     lucas.vm.network "private_network", ip: "192.168.57.102"
+    # He tenido que poner esto, puesto que no me dejaba de ninguna manera acceder mediante ssh a la máquina virtual, comente si es necesario esta línea
     config.ssh.insert_key = false
 
     lucas.vm.provision "shell", inline: <<-SHELL
@@ -32,11 +33,10 @@ Vagrant.configure("2") do |config|
     # Crear usuario FTP
     useradd -m usuarioftp
     echo "usuarioftp:usuarioftp" | sudo chpasswd
+    mkdir /home/usuarioftp/ftp
     chown usuarioftp:usuarioftp /home/usuarioftp/ftp
     chmod 755 /home/usuarioftp/ftp
 
-
-    mkdir /home/usuarioftp/ftp
     # Usar expect para saltarse las preguntas del comando openssl
     expect -c "
     spawn openssl req -new -x509 -days 365 -nodes -out /etc/ssl/certs/vsftpd.crt -keyout /etc/ssl/private/vsftpd.key
