@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
     chown usuarioftp:usuarioftp /home/usuarioftp/ftp
     chmod 755 /home/usuarioftp/ftp
 
-    # Usar expect para saltarse las preguntas del comando openssl
+    # Me salto las preguntas del comando openssl
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
       -keyout /etc/ssl/private/vsftpd.key -out /etc/ssl/certs/vsftpd.crt \
       -subj "/C=US/ST=State/L=City/O=Organization/OU=OrgUnit/CN=localhost"
