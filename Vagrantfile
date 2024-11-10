@@ -38,19 +38,19 @@ Vagrant.configure("2") do |config|
     chmod 755 /home/usuarioftp/ftp
 
     # Usar expect para saltarse las preguntas del comando openssl
-    expect -c "
-    spawn openssl req -new -x509 -days 365 -nodes -out /etc/ssl/certs/vsftpd.crt -keyout /etc/ssl/private/vsftpd.key
-      expect {
-        \"Country Name (2 letter code)\" {send \"US\r\"; exp_continue}
-        \"State or Province Name (full name)\" {send \"California\r\"; exp_continue}
-        \"Locality Name (eg, city)\" {send \"Los Angeles\r\"; exp_continue}
-        \"Organization Name (eg, company)\" {send \"My Company\r\"; exp_continue}
-        \"Organizational Unit Name (eg, section)\" {send \"IT\r\"; exp_continue}
-        \"Common Name (e.g. server FQDN or YOUR name)\" {send \"localhost\r\"; exp_continue}
-        \"Email Address\" {send \"admin@example.com\r\"; exp_continue}
-      }
-    "
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+      -keyout /etc/ssl/private/vsftpd.key -out /etc/ssl/certs/vsftpd.crt \
+      -subj "/C=US/ST=State/L=City/O=Organization/OU=OrgUnit/CN=localhost"
+
     cp -v /vagrant/vsftpd.conf /etc/vsftpd.conf
+
+    # Segunda web
+    mkdir -p /var/www/web2/html
+    git clone https://github.com/Lucas08-ux/web2.git /var/www/web2/html
+    chown -R www-data:www-data /var/www/web2/html
+    chmod -R 755 /var/www/web2
+    cp -v /vagrant/web2 /etc/nginx/sites-available/web2
+    ln -s /etc/nginx/sites-available/web2 /etc/nginx/sites-enabled/
 
     systemctl restart vsftpd
     systemctl restart nginx
