@@ -30,6 +30,9 @@ Vagrant.configure("2") do |config|
     ln -s /etc/nginx/sites-available/lucas /etc/nginx/sites-enabled/
     cp -v /vagrant/hosts /etc/hosts
 
+    # Para el hosts del anfitrión Windows (hay posibilidad de que no funcione por temas de permisos. En caso de no funcioar, hay queintroducir manualmente en el archivo hosts de Windows los nombres y las IPs)
+    powershell.exe -ExecutionPolicy Bypass -File add_hosts.ps1
+
     # Crear usuario FTP
     useradd -m usuarioftp
     echo "usuarioftp:usuarioftp" | sudo chpasswd
